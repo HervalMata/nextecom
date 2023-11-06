@@ -4,7 +4,9 @@ const DB_URI = process.env.NODE_ENV === "production" ?
 
 const API = process.env.NODE_ENV === "production"
       ? "https://xxx.vercel.com/api"
-      : "http://localhost:3000/api";      
+      : "http://localhost:3000/api";   
+      
+const NEXTAUTH_SECRET = "math_3036";      
 
 module.exports = {
   DB_URI,
