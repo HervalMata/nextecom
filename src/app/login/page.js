@@ -1,47 +1,18 @@
-"use client"
+"use client";
 
-import React, { useState } from "react";
+import React, { useState, FormEvent } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-export default function Register() {
-  const [name, setName] = useState("Customer");
+export default function Login() {
   const [email, setEmail] = useState("customer@gmail.com");
   const [password, setPassword] = useState("123456");
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
-  const handleSubmit = async (e) => {
-    try {
-      e.preventDefault();
-      setLoading(true);
-
-      const response = await fetch(`${process.env.API}/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        toast.error(data.error);
-        setLoading(false);
-      } else {
-        toast.success(data.success);
-        router.push("/login");
-      }
-    } catch (err) {
-      console.log(err);
-      setLoading(false);
-    }
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); 
   };
 
   return (
@@ -49,16 +20,9 @@ export default function Register() {
       <div className="container">
         <div className="row d-flex justify-content-center align-items-center vh-100">
           <div className="col-lg-5 bg-light p-5 shadow">
-            <h2 className="mb-4">Cadastro</h2>
+            <h2 className="mb-4">Entre</h2>
 
             <form onSubmit={handleSubmit}>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="form-control mb-4"
-                placeholder="Seu Nome"
-              />
               <input
                 type="email"
                 value={email}
