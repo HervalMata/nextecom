@@ -21,7 +21,14 @@ export default function TopNav() {
             Sair
           </a>
       </div>
-      ) : (
+      ) : status === "loading" ? (
+          <div className="d-flex">
+            <a className="nav-link text-danger">
+              Carregando...
+            </a>
+        </div> 
+      )
+      : (
         <div className="d-flex">
         <Link className="nav-link" href="/login">
           Entre
@@ -31,14 +38,6 @@ export default function TopNav() {
         </Link>
       </div>
       )}
-      <div className="d-flex">
-        <Link className="nav-link" href="/login">
-          Entre
-        </Link>
-        <Link className="nav-link" href="/register">
-          Cadastre-se
-        </Link>
-      </div>
     </nav>
   );
 }
