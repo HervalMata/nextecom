@@ -1,6 +1,7 @@
 import TopNav from '@/components/nav/TopNav'
 import './globals.css'
 import "bootstrap-material-design/dist/css/bootstrap-material-design.min.css"
+import { Toaster } from 'react-hot-toast'
 
 export const metadata = {
   title: 'Create Next App',
@@ -12,6 +13,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <TopNav />
+        <Toaster />
         {children}
       </body>
     </html>

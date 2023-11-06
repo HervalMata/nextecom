@@ -1,16 +1,42 @@
 "use client"
 
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+
 export default function Register() {
   const [name, setName] = useState("Customer");
   const [email, setEmail] = useState("customer@gmail.com");
   const [password, setPassword] = useState("123456");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const router = useRouter();
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
       setLoading(true);
-      console.table({ name, email, password });
+
+      const response = await fetch(`${process.env.API}/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        toast.error(data.error);
+        setLoading(false);
+      } else {
+        toast.success(data.success);
+        router.push("/login");
+      }
     } catch (err) {
       console.log(err);
       setLoading(false);
