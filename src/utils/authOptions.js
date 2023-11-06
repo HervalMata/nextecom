@@ -37,10 +37,29 @@ export const authOptions = {
       },
     }),
     GoogleProviders({
-      clientId: process.env.GOOGLE_CLIENT_ID;
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET;
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     })
   ],
+  callbacks: {
+    async signIn({ user }) {
+      dbConnect();
+
+      const { email } = user;
+
+      let dbUser = await User.findOne({ email });
+
+      if (!dbUser) {
+        dbUser = await User.create({
+          email,
+          name: user?.name,
+          image: user?.image,
+        });
+      }
+
+      return true;
+    }
+  },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/login",

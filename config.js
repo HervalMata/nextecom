@@ -8,8 +8,8 @@ const API = process.env.NODE_ENV === "production"
       
 const NEXTAUTH_SECRET = "math_3036";  
 
-GOOGLE_CLIENT_ID=xxx
-GOOGLE_CLIENT_SECRET=xxx
+GOOGLE_CLIENT_ID="xxx"
+GOOGLE_CLIENT_SECRET="xxx"
 
 module.exports = {
   DB_URI,

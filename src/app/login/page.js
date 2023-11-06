@@ -57,13 +57,13 @@ export default function Login() {
                 placeholder="Sua Senha"
               />
               <button
-                className="btn btn-primary btn-raised"
+                className="btn btn-primary btn-raised mb-4"
                 disabled={loading || !email || !password}
               >
                 {loading ? "Por favor espere..." : "Entrar"}
               </button>  
               <button
-                className="btn btn-danger btn-raised mb-4"
+                className="btn btn-danger btn-raised mb-4 p-2"
                 onClick={() => signIn("google", { callbackUrl: "/" })}
               >
                 Entre com Google
