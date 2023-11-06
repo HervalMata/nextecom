@@ -62,6 +62,12 @@ export default function Login() {
               >
                 {loading ? "Por favor espere..." : "Entrar"}
               </button>  
+              <button
+                className="btn btn-danger btn-raised mb-4"
+                onClick={() => signIn("google", { callbackUrl: "/" })}
+              >
+                Entre com Google
+              </button> 
             </form>
           </div>
         </div>
