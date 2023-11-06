@@ -2,7 +2,7 @@
 
 import React, { useState, FormEvent } from "react";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 
 export default function Login() {
@@ -11,6 +11,8 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,7 +30,7 @@ export default function Login() {
       toast.error(result?.error);
     } else {
       toast.success("Logado com sucesso");
-      router.push("/");
+      router.push(callbackUrl);
     }
   };
 
