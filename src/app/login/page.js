@@ -3,6 +3,7 @@
 import React, { useState, FormEvent } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default function Login() {
   const [email, setEmail] = useState("customer@gmail.com");
@@ -11,8 +12,24 @@ export default function Login() {
 
   const router = useRouter();
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    const result = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+    });
+
+    setLoading(false);
+
+    if (!result?.error) {
+      toast.error(result?.error);
+    } else {
+      toast.success("Logado com sucesso");
+      router.push("/");
+    }
   };
 
   return (
@@ -39,9 +56,9 @@ export default function Login() {
               />
               <button
                 className="btn btn-primary btn-raised"
-                disabled={loading || !name || !email || !password}
+                disabled={loading || !email || !password}
               >
-                {loading ? "Por favor espere..." : "Cadastrar"}
+                {loading ? "Por favor espere..." : "Entrar"}
               </button>  
             </form>
           </div>
