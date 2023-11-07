@@ -31,7 +31,7 @@ export const CategoryProvider = ({ children }) => {
       }
     } catch (err) {
       console.log("err => ", err);
-      toast.error("An error ocurred while creating the category");
+      toast.error("An error occurred while creating the category");
     }
   }
 
@@ -47,7 +47,7 @@ export const CategoryProvider = ({ children }) => {
       setCategories(data);
     } catch (err) {
       console.log("err => ", err);
-      toast.error("An error ocurred while fetching the categories");
+      toast.error("An error occurred while fetching the categories");
     }
   }
 
@@ -74,16 +74,30 @@ export const CategoryProvider = ({ children }) => {
       toast.success("Categoria atualizada com sucesso");
     } catch (err) {
       console.log("err => ", err);
-      toast.error("An error ocurred while updating the category");
+      toast.error("An error occurred while updating the category");
     }
   }
 
   const deleteCategory = async () => {
     try {
-      
+      const response = await fetch(`${process.env.API}/admin/category/${updatingCategory._id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const deletedCategory = await response.json();
+
+      setCategories((prevCategories) => prevCategories.filter((c) => c._id !== deletedCategory._id));
+
+      setUpdatingCategory(null);
+
+      toast.success("Categoria removida com sucesso");
     } catch (err) {
       console.log("err => ", err);
-      toast.error("An error ocurred while deleting the category");
+      toast.error("An error occurred while deleting the category");
     }
   }
 
