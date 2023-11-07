@@ -10,7 +10,25 @@ export const CategoryProvider = ({ children }) => {
 
   const createCategory = async () => {
     try {
-      
+      const response = await fetch(`${process.env.API}/admin/category`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+        }),
+      });
+
+      if (response.ok) {
+        toast.success("Categoria criada com sucesso");
+        const newlyCreatedCategory = await response.json();
+        setName("");
+        setCategories({newlyCreatedCategory, ...categories});
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.err); 
+      }
     } catch (err) {
       console.log("err => ", err);
       toast.error("An error ocurred while creating the category");
