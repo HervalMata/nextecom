@@ -37,7 +37,14 @@ export const CategoryProvider = ({ children }) => {
 
   const fetchCategories = async () => {
     try {
-      
+      const response = await fetch(`${process.env.API}/category`);
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      setCategories(data);
     } catch (err) {
       console.log("err => ", err);
       toast.error("An error ocurred while fetching the categories");
