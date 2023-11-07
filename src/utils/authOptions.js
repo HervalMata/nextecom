@@ -1,4 +1,5 @@
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/credentials";
 import dbConnect from "./dbConnect";
 import User from "@/app/models/user";
 import bcrypt from "bcrypt";
@@ -36,7 +37,7 @@ export const authOptions = {
         return user;
       },
     }),
-    GoogleProviders({
+    GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     })
@@ -58,17 +59,18 @@ export const authOptions = {
       }
 
       return true;
+      
+    },
 
-      jwt: async ({ token, user }) => {
-        const userByEmail = await User.findOne({ email: token.email });
-        userByEmail.password = undefined;
-        token.user = userByEmail;
-        return token;
-      },
-      session: async ({ session, token }) => {
-        session.user = token.user;
-        return session;
-      },
+    jwt: async ({ token, user }) => {
+      const userByEmail = await User.findOne({ email: token.email });
+      userByEmail.password = undefined;
+      token.user = userByEmail;
+      return token;
+    },
+    session: async ({ session, token }) => {
+      session.user = token.user;
+      return session;
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
