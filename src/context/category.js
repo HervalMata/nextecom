@@ -53,7 +53,25 @@ export const CategoryProvider = ({ children }) => {
 
   const updateCategory = async () => {
     try {
-      
+      const response = await fetch(`${process.env.API}/admin/category/${updatingCategory._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatingCategory),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const updatedCategory = await response.json();
+
+      setCategories((prevCategories) => prevCategories.map((c) => c._id === updatingCategory._id ? updatedCategory : c));
+
+      setUpdatingCategory(null);
+
+      toast.success("Categoria atualizada com sucesso");
     } catch (err) {
       console.log("err => ", err);
       toast.error("An error ocurred while updating the category");
