@@ -25,3 +25,23 @@ export async function PUT(req, context) {
     );
   }
 }
+
+export async function DELETE(req, context) {
+  await dbConnect();
+
+  try {
+    const deletedCategory = await Category.findByIdAndDelete(
+      context.params.id,
+    );
+
+    return NextResponse.json(deletedCategory);
+  } catch (err) {
+    console.log(err);
+    return NextResponse.json(
+      {
+        err: err.message,
+      },
+      { status: 500 }
+    );
+  }
+}
