@@ -168,7 +168,33 @@ export default function ProductCreate() {
                 ))}
             </div>
 
-            <pre>{JSON.stringify(product, null, 4)}</pre>
+            <div className="d-flex justify-content-between mt-3">
+                <button
+                    className={`btn btn-raised btn-${updatingProduct ? "info" : "primary"}`}
+                    onClick={() => (updatingProduct ? updateProduct() : createProduct())}
+                >
+                    {updatingProduct ? "Atualizar" : "Cadastrar"}
+                </button>
+
+                {updatingProduct && (
+                    <>
+                        <button
+                            onClick={() => deleteProduct()}
+                            className="btn btn-danger btn-raised"
+                        >
+                            Remover
+                        </button>
+                        <button
+                            onClick={() => window.location.reload()}
+                            className="btn btn-warning btn-raised"
+                        >
+                            Limpar
+                        </button>
+                    </>
+                )}
+            </div>
+
+            {/*<pre>{JSON.stringify(product, null, 4)}</pre>*/}
         </div>
     );
 }
