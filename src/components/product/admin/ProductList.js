@@ -64,6 +64,34 @@ export default function ProductList() {
                     </div>
                 ))}
             </div>
+
+            <div className="row">
+                <div className="col">
+                    <nav className="d-flex justify-content-center">
+                        <ul className="pagination">
+                            {Array.from({ length: totalPages }, (_, index) => {
+                                const page = index + 1;
+                                return (
+                                    <li
+                                        key={page}
+                                        className={`page-item ${
+                                            currentPage === page ? " ativo" : ""
+                                        }`}
+                                    >
+                                        <Link
+                                            className="page-link"
+                                            href={`${pathname}?page=${page}`}
+                                            as={`${pathname}?page=${page}`}
+                                        >
+                                            {page}
+                                        </Link>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
         </div>
     );
 }
