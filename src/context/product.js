@@ -3,6 +3,7 @@
 import {createContext, useContext, useState} from "react";
 import {useRouter} from "next/navigation";
 import toast from "react-hot-toast";
+import Resizer from "react-image-file-resizer";
 
 export const ProductContext = createContext();
 
@@ -17,11 +18,108 @@ export const ProductProvider = ({ children }) => {
     const router = useRouter();
 
     const uploadImages = (e) => {
-      console.log(e.target.files);
+        let files = e.target.files;
+
+        let allUploadedFiles = updatingProduct
+            ? updatingProduct.images || []
+            : product
+                ? product.images || []
+                : [];
+
+        if (files) {
+            const totalImages = allUploadedFiles.length + files.length;
+            if (totalImages > 4) {
+                alert("You can't upload more than 4 images.");
+                return;
+            }
+
+            setUploading(true);
+            const uploadPromises = [];
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const promise = new Promise((resolve) => {
+                    Resizer.imageFileResizer(
+                        file,
+                        128,
+                        720,
+                        "JPEG",
+                        100,
+                        0,
+                        (uri) => {
+                            fetch(`${process.env.API}/admin/upload/image`, {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({ image: uri }),
+                            })
+                                .then((response) => response.json())
+                                .then((data) => {
+                                    allUploadedFiles.unshift(data);
+                                    resolve();
+                                })
+                                .catch((err) => {
+                                    console.log("CLOUDINARY UPLOAD ERR", err);
+                                    resolve();
+                                });
+                        },
+                        "base64"
+                    );
+                });
+
+                uploadPromises.push(promise);
+            }
+
+            Promise.all(uploadPromises)
+                .then(() => {
+                    updatingProduct
+                        ? setUpdatingProduct({
+                            ...updatingProduct,
+                            images: allUploadedFiles,
+                        })
+                        : setProduct({ ...product, images: allUploadedFiles });
+
+                    setUploading(false);
+                })
+                .catch((error) => {
+                    console.log("Error uploading images: ", error);
+                    setUploading(false);
+                });
+        }
     };
 
     const deleteImage = (public_id) => {
+        setUploading(true);
 
+        fetch(`${process.env.API}/admin/upload/image`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ public_id }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                const filteredImages = updatingProduct
+                    ? updatingProduct.images.filter(
+                        (image) => image.public_id !== public_id
+                    )
+                    : product.images.filter((image) => image.public_id !== public_id);
+                updatingProduct
+                    ? setUpdatingProduct({
+                        ...updatingProduct,
+                        images: filteredImages,
+                    })
+                    : setProduct({ ...product, images: filteredImages });
+            })
+            .catch((err) => {
+                toast.error("Image delete failed");
+                console.log("CLOUDINARY UPLOAD ERR", err);
+            })
+            .finally(() => {
+                setUploading(false);
+            });
     };
 
     const createProduct = async () => {
